@@ -28,3 +28,6 @@ $group = Get-DistributionGroup -Identity $groupEmailAddress
 
 #Will prompt if you infact do want to update this group, and will update accordingly. This is under the impression that a column in the csv has the header of "email"
 $group | Update-DistributionGroupMember -Members $data.email
+
+# Disconnect from Exchange Online Powershell Sessions with no warning prompt
+Disconnect-ExchangeOnline -Confirm:$false
