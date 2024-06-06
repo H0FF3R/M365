@@ -44,11 +44,17 @@ $groupMembership | Format-Table
     It will then loop through each site, and each user to see if the user has access to the site. The output is the display name of the user, and the Url of the site. #>
 $siteURLs = Get-SPOSite -Limit All | Select-Object -ExpandProperty Url
 $siteMembership = @()
+$excludedURLs = @("https://$domain-my.sharepoint.com/", "https://$domain.sharepoint.com/", "https://$domain.sharepoint.com/search")
 foreach ($url in $siteURLs)
 {
     $siteAccess = Get-SPOUser -Site $url | Where-Object {$_.DisplayName -like $user.DisplayName} | Select-Object -Property DisplayName
     Start-Sleep -Seconds 1
     
+     # Skip the URL if it's in the exclusion list
+    if ($excludedURLs -contains $url) {
+        continue
+    }
+
     if ($null -ne $siteAccess)
     {
         $siteProperties = @{'URL'=$url}
